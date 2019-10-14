@@ -1,6 +1,6 @@
-package com.fedor.futbolin.controllers;
+package com.fedor.futbolin.controller;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -14,15 +14,15 @@ import org.springframework.web.multipart.MultipartFile;
 import com.fedor.futbolin.service.IFileService;
 
 @RestController
-@CrossOrigin(origins = "*", methods= {RequestMethod.GET,RequestMethod.POST, RequestMethod.PUT})
-@RequestMapping(path = "/file")
+@CrossOrigin(origins = "*", methods= {RequestMethod.POST})
+@RequestMapping(path = "/api/v1/files")
 public class FileController {
 	
 	@Autowired
 	private IFileService fileService;
 
 	@PostMapping("/upload")
-	public String uploadFile(@RequestParam("file") MultipartFile file, HttpSession session) {
-		return fileService.saveFile(file, session);
+	public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest) {
+		return fileService.saveFile(file, httpServletRequest);
 	}
 }

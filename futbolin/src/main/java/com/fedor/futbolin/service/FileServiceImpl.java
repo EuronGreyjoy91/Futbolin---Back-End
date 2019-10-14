@@ -2,9 +2,11 @@ package com.fedor.futbolin.service;
 
 import java.io.File;
 import java.io.FileOutputStream;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.Date;
 
-import javax.servlet.http.HttpSession;
+import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -13,25 +15,30 @@ import org.springframework.web.multipart.MultipartFile;
 public class FileServiceImpl implements IFileService{
 
 	@Override
-	public String saveFile(MultipartFile file, HttpSession session) {
+	public String saveFile(MultipartFile file, HttpServletRequest request) {
 		
-	    String nameExtension[] = file.getContentType().split("/");  
-	    String profileImage = new Date().getTime() + "." + nameExtension[1];  
+		String fileName = new Date().getTime() + file.getOriginalFilename().replaceAll("[^a-zA-Z0-9\\.\\-]", "_");
+		String path = request.getServletContext().getRealPath("") + "/files/" + fileName;
 	       
         try{  
-        	File convFile = new File("src/main/resources/images/"+profileImage);
-            convFile.createNewFile();
-            FileOutputStream fos = new FileOutputStream(convFile);
-
-            fos.write(file.getBytes());
-            fos.close();
-            System.out.println(convFile.getName());
+        	InputStream inputStream = file.getInputStream();
+        	OutputStream outputStream = new FileOutputStream(new File(path));
+        	int read = 0;
+        	byte[] bytes = new byte[1024];
+        	while( (read = inputStream.read(bytes)) != -1) {
+        		outputStream.write(bytes, 0, read);
+        	}
+        	
+        	outputStream.flush();
+        	outputStream.close();
             
-            return profileImage;
+        	
+        	
+            return fileName;
 
         }  
         catch(Exception exception){  
-            System.out.println("error while uploading image catch:: " + exception.getMessage());  
+            System.out.println("Error al subir la imagen:: " + exception.getMessage());  
             return null;
         }
         
