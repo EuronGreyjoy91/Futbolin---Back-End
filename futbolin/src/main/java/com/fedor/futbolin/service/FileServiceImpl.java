@@ -31,9 +31,7 @@ public class FileServiceImpl implements IFileService{
         	
         	outputStream.flush();
         	outputStream.close();
-            
-        	
-        	
+
             return fileName;
 
         }  

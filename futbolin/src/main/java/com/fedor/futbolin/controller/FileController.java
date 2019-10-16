@@ -22,7 +22,7 @@ public class FileController {
 	@Autowired
 	private IFileService fileService;
 
-	@PostMapping("/upload")
+	@PostMapping
 	public String uploadFile(@RequestParam("file") MultipartFile file, HttpServletRequest httpServletRequest) {
 		return fileService.saveFile(file, httpServletRequest);
 	}

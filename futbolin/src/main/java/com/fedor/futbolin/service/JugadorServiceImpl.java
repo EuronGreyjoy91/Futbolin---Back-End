@@ -22,7 +22,7 @@ public class JugadorServiceImpl implements IJugadorService{
 
 	@Override
 	public List<Jugador> getJugadores() {
-		return jugadorRepository.findAll();
+		return jugadorRepository.findByActivoOrderByIdAsc(true);
 	}
 
 	@Override
